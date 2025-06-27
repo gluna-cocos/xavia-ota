@@ -28,7 +28,7 @@ export default function Layout({ children, ...props }: { children: React.ReactNo
         position="relative">
         <Box>
           <Image
-            src="/xavia_logo.png"
+            src="/logo.png"
             width={200}
             height={200}
             style={{ objectFit: 'contain' }}

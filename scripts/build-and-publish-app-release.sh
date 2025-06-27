@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if the correct number of arguments are provided
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <runtimeVersion> <xavia-ota-url>"
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <runtimeVersion> <version> <xavia-ota-url>"
   exit 1
 fi
 
@@ -12,7 +12,8 @@ commitMessage=$(git log -1 --pretty=%B)
 
 # Assign arguments to variables
 runtimeVersion=$1
-serverHost=$2
+version=$2
+serverHost=$3
 
 # Generate a timestamp for the output folder
 timestamp=$(date -u +%Y%m%d%H%M%S)
@@ -21,8 +22,9 @@ outputFolder="ota-builds/$timestamp"
 # Ask the user to confirm the hash, commit message, runtime version, and output folder
 echo "Output Folder: $outputFolder"
 echo "Runtime Version: $runtimeVersion"
+echo "Version: $version"
 echo "Commit Hash: $commitHash"
-echo "Commit Message: $commitMessage"
+echo "Commit Message: Nueva version $version"
 
 read -p "Do you want to proceed with these values? (y/n): " confirm
 
@@ -47,7 +49,7 @@ zip -q -r ${timestamp}.zip .
 
 
 # Upload the zip file to the server
-curl -X POST $serverHost/api/upload -F "file=@${timestamp}.zip" -F "runtimeVersion=$runtimeVersion" -F "commitHash=$commitHash" -F "commitMessage=$commitMessage"
+curl -X POST $serverHost/api/upload -F "file=@${timestamp}.zip" -F "runtimeVersion=$runtimeVersion" -F "version=$version" -F "commitHash=$commitHash" -F "commitMessage=$commitMessage"
 
 echo ""
 

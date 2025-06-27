@@ -10,10 +10,14 @@ export default async function rollbackHandler(req: NextApiRequest, res: NextApiR
     return;
   }
 
-  const { path, runtimeVersion, commitHash, commitMessage } = req.body;
+  const { path, version, runtimeVersion, commitHash, commitMessage } = req.body;
 
   if (!path) {
     res.status(400).json({ error: 'Missing path' });
+    return;
+  }
+  if (!version) {
+    res.status(400).json({ error: 'Missing version' });
     return;
   }
 
@@ -36,6 +40,7 @@ export default async function rollbackHandler(req: NextApiRequest, res: NextApiR
     await storage.copyFile(path, newPath);
 
     await DatabaseFactory.getDatabase().createRelease({
+      version,
       path: newPath,
       runtimeVersion,
       timestamp: moment().utc().toString(),

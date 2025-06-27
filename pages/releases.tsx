@@ -32,6 +32,7 @@ import { showToast } from '../components/toast';
 interface Release {
   path: string;
   runtimeVersion: string;
+  version: string;
   timestamp: string;
   size: number;
   commitHash: string | null;
@@ -91,6 +92,7 @@ export default function ReleasesPage() {
                   <Tr>
                     <Th>Name</Th>
                     <Th>Runtime Version</Th>
+                    <Th>Version</Th>
                     <Th>Commit Hash</Th>
                     <Th>Commit Message</Th>
                     <Th>Timestamp (UTC)</Th>
@@ -107,6 +109,7 @@ export default function ReleasesPage() {
                       <Tr key={index}>
                         <Td>{release.path}</Td>
                         <Td>{release.runtimeVersion}</Td>
+                        <Td>{release.version}</Td>
                         <Td>
                           <Tooltip label={release.commitHash}>
                             <Text isTruncated w="10rem">
@@ -184,6 +187,7 @@ export default function ReleasesPage() {
                                             },
                                             body: JSON.stringify({
                                               path: selectedRelease?.path,
+                                              version: selectedRelease?.version,
                                               runtimeVersion: selectedRelease?.runtimeVersion,
                                               commitHash: selectedRelease?.commitHash,
                                               commitMessage: selectedRelease?.commitMessage,

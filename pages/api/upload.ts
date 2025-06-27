@@ -28,11 +28,12 @@ export default async function uploadHandler(req: NextApiRequest, res: NextApiRes
     const [fields, files] = await form.parse(req);
     const file = files.file?.[0];
     const runtimeVersion = fields.runtimeVersion?.[0];
+    const version = fields.version?.[0];
     const commitHash = fields.commitHash?.[0];
     const commitMessage = fields.commitMessage?.[0] || 'No message provided';
 
-    if (!file || !runtimeVersion || !commitHash) {
-      res.status(400).json({ error: 'Missing file, runtime version, or commit hash' });
+    if (!file || !runtimeVersion || !commitHash || !version) {
+      res.status(400).json({ error: 'Missing file, runtime version, version, or commit hash' });
       return;
     }
 
@@ -53,6 +54,7 @@ export default async function uploadHandler(req: NextApiRequest, res: NextApiRes
     await DatabaseFactory.getDatabase().createRelease({
       path,
       runtimeVersion,
+      version,
       timestamp: moment().utc().toString(),
       commitHash,
       commitMessage,

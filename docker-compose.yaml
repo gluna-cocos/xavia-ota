@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  xavia-postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./containers/database/schema:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  xavia-ota:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - HOST=http://localhost:3000
+      - BLOB_STORAGE_TYPE=local
+      - DB_TYPE=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=xavia-postgres
+      - POSTGRES_PORT=5432
+      - PRIVATE_KEY_BASE_64=${PRIVATE_KEY_BASE_64}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    depends_on:
+      xavia-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

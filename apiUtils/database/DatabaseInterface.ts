@@ -1,5 +1,6 @@
 export interface Release {
   id: string;
+  version: string;
   runtimeVersion: string;
   path: string;
   timestamp: string;

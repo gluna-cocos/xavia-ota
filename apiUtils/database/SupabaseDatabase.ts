@@ -31,6 +31,7 @@ export class SupabaseDatabase implements DatabaseInterface {
     if (data) {
       return {
         id: data.id,
+        version: data.version,
         runtimeVersion: data.runtime_version,
         path: data.path,
         timestamp: data.timestamp,
@@ -125,6 +126,7 @@ export class SupabaseDatabase implements DatabaseInterface {
       .insert({
         path: release.path,
         runtime_version: release.runtimeVersion,
+        version: release.version,
         timestamp: release.timestamp,
         commit_hash: release.commitHash,
         commit_message: release.commitMessage,
@@ -150,6 +152,7 @@ export class SupabaseDatabase implements DatabaseInterface {
       id: data.id,
       path: data.path,
       runtimeVersion: data.runtime_version,
+      version: data.version,
       timestamp: data.timestamp,
       commitHash: data.commit_hash,
       commitMessage: data.commit_message,
@@ -167,6 +170,7 @@ export class SupabaseDatabase implements DatabaseInterface {
       id: release.id,
       path: release.path,
       runtimeVersion: release.runtime_version,
+      version: release.version,
       timestamp: release.timestamp,
       size: release.size,
       commitHash: release.commit_hash,

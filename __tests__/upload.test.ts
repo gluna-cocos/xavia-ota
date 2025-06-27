@@ -34,6 +34,7 @@ describe('Upload API', () => {
     const mockForm = {
       parse: jest.fn().mockResolvedValue([
         {
+          version: ['1.0.0'],
           runtimeVersion: ['1.0.0'],
           commitHash: ['abc123'],
           commitMessage: ['Test commit message'],
@@ -86,6 +87,7 @@ describe('Upload API', () => {
     expect(mockDatabase.createRelease).toHaveBeenCalledWith({
       path: 'updates/1.0.0/timestamp.zip',
       runtimeVersion: '1.0.0',
+      version: '1.0.0',
       timestamp: expect.any(String),
       commitHash: 'abc123',
       commitMessage: 'Test commit message',

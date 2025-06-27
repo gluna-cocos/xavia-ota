@@ -26,6 +26,7 @@ export default async function releasesHandler(req: NextApiRequest, res: NextApiR
         const commitHash = release ? release.commitHash : null;
         releases.push({
           path: release?.path || `${folderPath}/${file.name}`,
+          version: release?.version,
           runtimeVersion,
           timestamp: file.created_at,
           size: file.metadata.size,

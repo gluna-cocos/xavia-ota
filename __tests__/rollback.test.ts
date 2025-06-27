@@ -48,6 +48,7 @@ describe('Rollback API', () => {
       body: {
         path: 'updates/1.0.0/old.zip',
         runtimeVersion: '1.0.0',
+        version: '1.0.0',
         commitHash: 'abc123',
       },
     });
