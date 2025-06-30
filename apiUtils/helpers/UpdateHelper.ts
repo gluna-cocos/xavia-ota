@@ -3,6 +3,9 @@ import mime from 'mime';
 import { HashHelper } from './HashHelper';
 import { ZipHelper } from './ZipHelper';
 import { StorageFactory } from '../storage/StorageFactory';
+import { getLogger } from '../logger';
+
+const logger = getLogger('UpdateHelper');
 
 export class NoUpdateAvailableError extends Error {}
 export type GetAssetMetadataArg =
@@ -27,10 +30,17 @@ export class UpdateHelper {
   static async getLatestUpdateBundlePathForRuntimeVersionAsync(
     runtimeVersion: string
   ): Promise<string> {
+    logger.info('getLatestUpdateBundlePathForRuntimeVersionAsync called', { runtimeVersion });
     const storage = StorageFactory.getStorage();
     const updatesDirectoryForRuntimeVersion = `updates/${runtimeVersion}`;
 
-    if (!(await storage.fileExists(updatesDirectoryForRuntimeVersion))) {
+    const exists = await storage.fileExists(updatesDirectoryForRuntimeVersion);
+    logger.info('Checking if updates directory exists', {
+      updatesDirectoryForRuntimeVersion,
+      exists,
+    });
+    if (!exists) {
+      logger.info('No updates directory found for runtime version', { runtimeVersion });
       throw new NoUpdateAvailableError();
     }
 
@@ -38,11 +48,22 @@ export class UpdateHelper {
       .filter((file) => file.name.endsWith('.zip'))
       .sort((a, b) => parseInt(b.name.split('.')[0], 10) - parseInt(a.name.split('.')[0], 10));
 
+    logger.info('Zip files found', {
+      count: zipFiles.length,
+      zipFiles: zipFiles.map((f) => f.name),
+    });
+
     if (!zipFiles.length) {
+      logger.info('No updates found for runtime version', { runtimeVersion });
       throw new Error(`No updates found for runtime version: ${runtimeVersion}`);
     }
 
-    return `${updatesDirectoryForRuntimeVersion}/${zipFiles[0].name.replace('.zip', '')}`;
+    const latestPath = `${updatesDirectoryForRuntimeVersion}/${zipFiles[0].name.replace(
+      '.zip',
+      ''
+    )}`;
+    logger.info('Returning latest update bundle path', { latestPath });
+    return latestPath;
   }
 
   static async getAssetMetadataAsync(arg: GetAssetMetadataArg) {

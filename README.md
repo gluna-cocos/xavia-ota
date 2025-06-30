@@ -281,4 +281,5 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
 
 Para correr:
 docker compose up --build
+docker compose --env-file .env.local up --build (si corres local para que tome tu .env.local)
 docker compose down -v #mata los volumenes, es decir la data de la DB

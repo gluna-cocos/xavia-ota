@@ -2,9 +2,11 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import { StorageInterface } from './StorageInterface';
+import { getLogger } from '../logger';
 
 export class LocalStorage implements StorageInterface {
   private baseDir: string;
+  private logger = getLogger('LocalStorage');
 
   constructor() {
     this.baseDir = path.join(process.cwd(), 'local-releases');
@@ -37,10 +39,13 @@ export class LocalStorage implements StorageInterface {
   }
 
   async fileExists(filePath: string): Promise<boolean> {
+    this.logger.info('fileExists called', { filePath });
     try {
       await fs.access(path.join(this.baseDir, filePath));
+      this.logger.info('fileExists result', { filePath, exists: true });
       return true;
     } catch {
+      this.logger.info('fileExists result', { filePath, exists: false });
       return false;
     }
   }

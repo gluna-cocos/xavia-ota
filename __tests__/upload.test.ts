@@ -14,7 +14,8 @@ jest.mock('../apiUtils/storage/StorageFactory');
 jest.mock('../apiUtils/helpers/ZipHelper');
 jest.mock('../apiUtils/helpers/HashHelper');
 jest.mock('formidable');
-jest.mock('fs');
+const mockFileContent = Buffer.from('test file content');
+jest.spyOn(fs, 'readFileSync').mockReturnValue(mockFileContent);
 jest.mock('adm-zip');
 
 describe('Upload API', () => {
@@ -47,7 +48,7 @@ describe('Upload API', () => {
     (formidable as unknown as jest.Mock).mockReturnValue(mockForm);
 
     // Mock file system
-    const mockFileContent = Buffer.from('test file content');
+
     (fs.readFileSync as jest.Mock).mockReturnValue(mockFileContent);
 
     // Mock AdmZip
