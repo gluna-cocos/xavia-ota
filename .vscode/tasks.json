@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker-compose-up",
+      "type": "shell",
+      "command": "docker compose --env-file .env.local up --build",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}

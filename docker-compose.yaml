@@ -22,6 +22,10 @@ services:
     build: .
     ports:
       - '3000:3000'
+      - '9229:9229'
+      - '9230:9230'
+    volumes:
+      - ./:/app
     environment:
       - HOST=http://localhost:3000
       - BLOB_STORAGE_TYPE=${BLOB_STORAGE_TYPE}
